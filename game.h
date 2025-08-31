@@ -2,14 +2,16 @@
 #define GAME_H
 
 #include <stdbool.h>
-#include "board.h"
 #include "save.h"
 
 typedef struct {
-	GameState state;
+    GameState state;
 } Game;
 
-#endif // GAME_H
-
 void game_new(Game* g, int num_players, const char* u0, const char* n0, const char* u1, const char* n1);
+bool game_load(Game* g, const char* filepath);
+bool game_save(const Game* g, const char* filepath);
+void game_print_board(const Game* g, bool reveal_all);
+void game_loop(Game* g);
 
+#endif // GAME_H
