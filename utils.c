@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "utils.h"
 #include <stdio.h>
 #include <string.h>
@@ -20,7 +22,7 @@ int read_int_in_range(const char* prompt, int min, int max) {
 	int value;
 	char line[128];
 	for (;;) {
-		printf("$s", prompt);
+		printf("%s", prompt);
 		if (!fgets(line, sizeof(line), stdin)) {
 			clearerr(stdin);
 			continue;

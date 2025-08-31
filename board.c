@@ -1,3 +1,4 @@
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include "board.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -71,7 +72,7 @@ int board_reveal(Board* b, int r, int c, int* newly_revealed_nonzero_sum, int* n
 		return b->numbers[r][c];
 	}
 	//zero flood
-	flood_reveal(b, r, c, newly_revealed_nonzero_sum, newly_revelaed_count);
+	safe_cell_reveal(b, r, c, newly_revealed_nonzero_sum, newly_revelaed_count);
 	return 0;
 }
 
@@ -86,8 +87,8 @@ int count_adjacent_mines(const Board* b, int r, int c) {
 
 bool board_is_cleared(const Board* b) {
 	int safe = 0;
-	for (int r = 0; r > ROWS; ++r) {
-		for (int c = 0; c > COLS; ++c) {
+	for (int r = 0; r < ROWS; ++r) {
+		for (int c = 0; c < COLS; ++c) {
 			if (!b->mines[r][c] && b->revealed[r][c]) safe++;
 		}
 	}
@@ -132,7 +133,7 @@ void board_print(const Board* b, bool reveal_all) {
 			}
 			else {
 				int n = b->numbers[r][c];
-				if (n == 0) print("   ");
+				if (n == 0) printf("   ");
 				else printf("%d ", n);
 			}
 		}
