@@ -6,11 +6,13 @@
 #include <string.h>
 #include <ctype.h>
 
+//Used to clear the input buffer
 void clear_input_buffer(void) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF) {}
 }
 
+//Trims and trailing newlines
 void trim_newline(char* s) {
     if (!s) return;
     size_t n = strlen(s);
@@ -19,6 +21,7 @@ void trim_newline(char* s) {
     if (n > 0 && s[n - 1] == '\r') s[n - 1] = '\0';
 }
 
+//Prompts the user for an integer input within a specified range
 int read_int_in_range(const char* prompt, int min, int max) {
     int value;
     char line[128];
@@ -33,6 +36,7 @@ int read_int_in_range(const char* prompt, int min, int max) {
     }
 }
 
+//Reads a string
 void read_string(const char* prompt, char* buf, int buflen) {
     for (;;) {
         printf("%s", prompt);
@@ -43,6 +47,7 @@ void read_string(const char* prompt, char* buf, int buflen) {
     }
 }
 
+//Used for y/n functionality
 bool yes_no(const char* prompt) {
     char line[16];
     for (;;) {

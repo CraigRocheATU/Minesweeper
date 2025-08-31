@@ -9,6 +9,7 @@
 #include <string.h>
 #include <time.h>
 
+//Starts a new game
 void game_new(Game* g, int num_players, const char* u0, const char* n0, const char* u1, const char* n1) {
     g->state.num_players = num_players;
     strncpy(g->state.usernames[0], u0 ? u0 : "player1", 63);
@@ -26,6 +27,7 @@ void game_new(Game* g, int num_players, const char* u0, const char* n0, const ch
 bool game_load(Game* g, const char* filepath) { return load_game_from_file(filepath, &g->state); }
 bool game_save(const Game* g, const char* filepath) { return save_game_to_file(filepath, &g->state); }
 
+//Prints the board and the scores
 void game_print_board(const Game* g, bool reveal_all) {
     printf("\nScores: %s=%d | %s=%d | Turn: %s\n",
         g->state.display_names[0], g->state.scores[0],
@@ -34,6 +36,7 @@ void game_print_board(const Game* g, bool reveal_all) {
     board_print(&g->state.board, reveal_all);
 }
 
+//Ends the game and displays the winner
 static void end_game(Game* g, int winner) {
     g->state.game_over = true;
     g->state.winner = winner;
@@ -46,6 +49,7 @@ static void end_game(Game* g, int winner) {
     board_print(&g->state.board, true);
 }
 
+//Main gameplay loop
 void game_loop(Game* g) {
     while (!g->state.game_over) {
         if (board_is_cleared(&g->state.board)) {

@@ -3,16 +3,19 @@
 
 #include <stdbool.h>
 
+//The Rows and collumns of the board and the number of mines
 #define ROWS 8
 #define COLS 8
 #define MINES 10
 
+//Board Sturcture
 typedef struct {
     bool mines[ROWS][COLS];
-    int  numbers[ROWS][COLS];   // -1 for mine, otherwise 0..8
+    int  numbers[ROWS][COLS];
     bool revealed[ROWS][COLS];
 } Board;
 
+//Declaration of functions
 void board_init(Board* b);
 void board_place_mines(Board* b);
 void board_compute_numbers(Board* b);

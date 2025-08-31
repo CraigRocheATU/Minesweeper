@@ -7,16 +7,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Creates a player node from linked list
 static Player* node_new(const char* u, const char* p, const char* d) {
     Player* n = (Player*)malloc(sizeof(Player));
     if (!n) return NULL;
-    strncpy(n->username, u, sizeof(n->username) - 1); n->username[sizeof(n->username) - 1] = '\0';
-    strncpy(n->password, p, sizeof(n->password) - 1); n->password[sizeof(n->password) - 1] = '\0';
-    strncpy(n->display_name, d, sizeof(n->display_name) - 1); n->display_name[sizeof(n->display_name) - 1] = '\0';
-    n->wins = 0; n->losses = 0; n->next = NULL;
+    strncpy(n->username, u, sizeof(n->username) - 1);
+    n->username[sizeof(n->username) - 1] = '\0';
+    strncpy(n->password, p, sizeof(n->password) - 1);
+    n->password[sizeof(n->password) - 1] = '\0';
+    strncpy(n->display_name, d, sizeof(n->display_name) - 1);
+    n->display_name[sizeof(n->display_name) - 1] = '\0';
+    n->wins = 0;
+    n->losses = 0;
+    n->next = NULL;
     return n;
 }
 
+//Loads players from the login.txt
 Player* players_load_from_file(const char* filename) {
     FILE* f = fopen(filename, "r");
     if (!f) {
@@ -35,21 +42,30 @@ Player* players_load_from_file(const char* filename) {
         if (nd && d[nd - 1] == '\r') d[--nd] = '\0';
         Player* n = node_new(u, p, d);
         if (!n) break;
-        if (!head) head = tail = n; else { tail->next = n; tail = n; }
+        if (!head) head = tail = n;
+        else { 
+            tail->next = n; tail = n; 
+        }
     }
     fclose(f);
     return head;
 }
 
+//Frees the linked lilst
 void players_free(Player* head) {
-    while (head) { Player* n = head->next; free(head); head = n; }
+    while (head) { Player* n = head->next;
+    free(head); head = n;
+    }
 }
 
+//Finds specific player using username
 Player* players_find(Player* head, const char* username) {
-    for (Player* p = head; p; p = p->next) if (strcmp(p->username, username) == 0) return p;
+    for (Player* p = head;
+        p; p = p->next) if (strcmp(p->username, username) == 0) return p;
     return NULL;
 }
 
+//Used to validate player logins ensuring username & password match
 bool players_validate(Player* head, const char* username, const char* password, char* out_display_name, int out_len) {
     Player* p = players_find(head, username);
     if (!p) return false;

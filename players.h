@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+//Player Structure
 typedef struct Player {
     char username[64];
     char password[64];
@@ -12,6 +13,7 @@ typedef struct Player {
     struct Player* next;
 } Player;
 
+//Declaration of functions
 Player* players_load_from_file(const char* filename);
 void players_free(Player* head);
 Player* players_find(Player* head, const char* username);

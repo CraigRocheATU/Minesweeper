@@ -17,6 +17,7 @@
 #define MKDIR(p) mkdir(p, 0777)
 #endif
 
+//Ensures save directory exists
 bool ensure_saves_dir(void) {
     struct stat st;
 #ifdef _WIN32
@@ -27,6 +28,7 @@ bool ensure_saves_dir(void) {
     return MKDIR("saves") == 0;
 }
 
+//Lists all the save files in the save directory
 bool list_save_files(char files[][256], int max_files, int* out_count) {
     *out_count = 0;
 #ifdef _WIN32
@@ -55,6 +57,8 @@ bool list_save_files(char files[][256], int max_files, int* out_count) {
 #endif
 }
 
+
+//The following are used for writing and reading matrices to a file, specifically 2D grid arrys used for the board
 static void write_matrix_bool(FILE* f, bool m[ROWS][COLS]) {
     for (int r = 0; r < ROWS; ++r) {
         for (int c = 0; c < COLS; ++c) fprintf(f, "%d ", m[r][c] ? 1 : 0);
@@ -69,13 +73,18 @@ static void write_matrix_int(FILE* f, int m[ROWS][COLS]) {
 }
 static void read_matrix_bool(FILE* f, bool m[ROWS][COLS]) {
     for (int r = 0; r < ROWS; ++r)
-        for (int c = 0; c < COLS; ++c) { int x; fscanf(f, "%d", &x); m[r][c] = x ? true : false; }
+        for (int c = 0; c < COLS; ++c) {
+            int x;
+            fscanf(f, "%d", &x);
+            m[r][c] = x ? true : false; 
+        }
 }
 static void read_matrix_int(FILE* f, int m[ROWS][COLS]) {
     for (int r = 0; r < ROWS; ++r)
         for (int c = 0; c < COLS; ++c) fscanf(f, "%d", &m[r][c]);
 }
 
+//Saves the current game state to a file
 bool save_game_to_file(const char* filepath, const GameState* gs) {
     FILE* f = fopen(filepath, "w");
     if (!f) return false;
@@ -101,6 +110,7 @@ bool save_game_to_file(const char* filepath, const GameState* gs) {
     return true;
 }
 
+//Loads an existing game state from a file
 bool load_game_from_file(const char* filepath, GameState* gs) {
     FILE* f = fopen(filepath, "r");
     if (!f) return false;
@@ -109,7 +119,7 @@ bool load_game_from_file(const char* filepath, GameState* gs) {
 
     char key[32];
     long long tstamp; int tmp;
-    fscanf(f, "%31s %lld", key, &tstamp); // timestamp
+    fscanf(f, "%31s %lld", key, &tstamp);
     fscanf(f, "%31s %d", key, &gs->num_players);
     fscanf(f, "%31s %63s", key, gs->usernames[0]);
     fscanf(f, "%31s %63s", key, gs->display_names[0]);
@@ -121,17 +131,18 @@ bool load_game_from_file(const char* filepath, GameState* gs) {
     fscanf(f, "%31s %d", key, &tmp); gs->game_over = tmp ? true : false;
     fscanf(f, "%31s %d", key, &gs->winner);
 
-    fscanf(f, "%31s", key); // mines
+    fscanf(f, "%31s", key);
     read_matrix_bool(f, gs->board.mines);
-    fscanf(f, "%31s", key); // numbers
+    fscanf(f, "%31s", key);
     read_matrix_int(f, gs->board.numbers);
-    fscanf(f, "%31s", key); // revealed
+    fscanf(f, "%31s", key);
     read_matrix_bool(f, gs->board.revealed);
 
     fclose(f);
     return true;
 }
 
+//Prints a summary of the saved game to the console
 void print_save_summary(const GameState* gs) {
     printf("Players: %d | ", gs->num_players);
     printf("%s(%d) vs %s(%d) | ",
