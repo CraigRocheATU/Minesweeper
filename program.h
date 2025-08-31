@@ -1,13 +1,6 @@
-#pragma once
-#include <stdio.h>
-
-
-inline void add(int a, int b)
-{
-    printf("Added value=%d\n", a + b);
-}
-
-inline void multiply(int a, int b)
-{
-    printf("Multiplied value=%d\n", a * b);
-}
+#include "utils.h"
+#include "board.h"
+#include "players.h"
+#include "save.h"
+#include "game.h"
+#include "app.h"
